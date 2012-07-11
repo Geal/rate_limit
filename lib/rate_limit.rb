@@ -11,10 +11,11 @@ module RateLimit
   def self.blockByFingerprint(key, requests_per_seconds = 1, cache = Rails.cache)
     loader = Loader.new cache
 
+    key = key+"b"
     timestamp = Time.new.to_time.to_i
     counter = loader.read key
     if counter.nil?
-      loader.write key, Visit.new(1, timestamp)
+      loader.write key, BlockedVisit.new(1, timestamp)
       true
     else
       counter.visits += 1
@@ -24,4 +25,27 @@ module RateLimit
     end
   end
 
+  def self.slowByFingerprint(key, requests_per_seconds = 0.5, factor = 1, cache = Rails.cache)
+    loader = Loader.new cache
+
+    key = key+"s"
+    timestamp = Time.new.to_time.to_i
+    counter = loader.read key
+    if counter.nil?
+      loader.write key, SlowedVisit.new(1, timestamp)
+      true
+    else
+      time = timestamp - counter.previous
+      counter.previous = timestamp
+      wait_time = requests_per_seconds*factor*counter.visits
+      if wait_time < time
+        loader.write key, counter
+        true
+      else
+        counter.visits += 1
+        loader.write key, counter
+        false
+      end
+    end
+  end
 end
