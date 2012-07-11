@@ -5,10 +5,10 @@ require "rate_limit/visit"
 module RateLimit
   def self.limitByIp(request, requests_per_seconds = 1, cache = Rails.cache)
     key = request.remote_ip+request.fullpath
-    blockByFingerprint(key, requests_per_seconds, cache)
+    blockByKey(key, requests_per_seconds, cache)
   end
 
-  def self.blockByFingerprint(key, requests_per_seconds = 1, cache = Rails.cache)
+  def self.blockByKey(key, requests_per_seconds = 1, cache = Rails.cache)
     loader = Loader.new cache
 
     key = key+"b"
@@ -25,7 +25,7 @@ module RateLimit
     end
   end
 
-  def self.slowByFingerprint(key, requests_per_seconds = 0.5, factor = 1, cache = Rails.cache)
+  def self.slowByKey(key, requests_per_seconds = 0.5, factor = 1, cache = Rails.cache)
     loader = Loader.new cache
 
     key = key+"s"
