@@ -53,4 +53,14 @@ module RateLimit
       end
     end
   end
+
+  def self.resetBlockerByKey(key)
+    loader = Loader.new cache
+    cache.delete(key+"b")
+  end
+
+  def self.resetSlowerByKey(key)
+    loader = Loader.new cache
+    cache.delete(key+"s")
+  end
 end

@@ -11,4 +11,8 @@ class RateLimit::Loader
   def write(key, data)
     @cache.write(key, Marshal::dump(data))
   end
+
+  def delete(key)
+    @cache.delete(key)
+  end
 end
