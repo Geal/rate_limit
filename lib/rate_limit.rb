@@ -8,6 +8,11 @@ module RateLimit
     blockByKey(key, requests_per_seconds, cache)
   end
 
+  def self.slowByIp(request, requests_per_seconds = 1, factor = 1, cache = Rails.cache)
+    key = request.remote_ip+request.fullpath
+    slowByKey(key, requests_per_seconds, factor, cache)
+  end
+
   def self.blockByKey(key, requests_per_seconds = 1, cache = Rails.cache)
     loader = Loader.new cache
 
