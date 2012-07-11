@@ -4,11 +4,14 @@ require "rate_limit/visit"
 
 module RateLimit
   def self.limitByIp(request, requests_per_seconds = 1, cache = Rails.cache)
+    key = request.remote_ip+request.fullpath
+    blockByFingerprint(key, requests_per_seconds, cache)
+  end
+
+  def self.blockByFingerprint(key, requests_per_seconds = 1, cache = Rails.cache)
     loader = Loader.new cache
 
     timestamp = Time.new.to_time.to_i
-    key = request.remote_ip+request.fullpath
-    puts key
     counter = loader.read key
     if counter.nil?
       loader.write key, Visit.new(1, timestamp)
