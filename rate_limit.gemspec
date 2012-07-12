@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = RateLimit::VERSION
   s.authors     = ["Geoffroy Couprie"]
   s.email       = ["geo.couprie@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/Geal/rate_limit"
   s.summary     = %q{rate_limit filters page access in your Rails application}
   s.description = %q{Limit request frequence by IP, by page, for login or password reset forms}
 
